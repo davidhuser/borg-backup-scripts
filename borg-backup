@@ -5,8 +5,7 @@ main () {
 
 #!/bin/sh
 
-	REPOSITORY=/mnt/david-huser-backup
-	export BORG_PASSPHRASE=$(<~/BORG_PASSPHRASE)
+	REPOSITORY=/mnt/david-huser-bak
 
 	# notification
 	notify-send -t 5000 -i $N_ICON $N_TITLE "started at $(date +%H:%M)"
@@ -17,11 +16,11 @@ main () {
 	    /etc/                                       \
 	    --exclude '/home/*/.cache'                  \
 	    --exclude '*.pyc')
-    
+
     echo "$OUTPUT"
 
     echo "$OUTPUT" | grep -i "Duration" | xargs -0 notify-send -t 5000 -i $N_ICON $N_TITLE
-    
+
 	# Use the `prune` subcommand to maintain 7 daily, 4 weekly and 6 monthly
 	# archives of THIS machine. The '{hostname}-' prefix is very important to
 	# limit prune's operation to this machine's archives and not apply to

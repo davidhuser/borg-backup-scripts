@@ -2,7 +2,7 @@
 Description=Borg Backup
 
 [Service]
-ExecStart=/usr/bin/borg-backup
+ExecStart=/usr/local/bin/borg-backup.sh
 
 [Install]
 WantedBy=default.target

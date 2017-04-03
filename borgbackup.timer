@@ -1,5 +1,5 @@
 [Unit]
-Description=Run borgbackup daily at eight
+Description=Run borgbackup daily at five, or run if missed
 
 [Timer]
 OnCalendar=17:00
