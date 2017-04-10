@@ -1,25 +1,29 @@
-#!/bin/sh
 #!/bin/bash
 
 main () {
 
-#!/bin/sh
+	REPOSITORY='/mnt/david-huser-bak'
+	export BORG_PASSPHRASE=$(</home/david-w/.config/BORG_PASSPHRASE)
 
-	REPOSITORY=/mnt/david-huser-bak
+	if grep -qs "$REPOSITORY" /proc/mounts; then
+	  echo "$REPOSITORY mounted."
+	else
+		notify-send -t 10000 $N_TITLE "$REPOSITORY not available"
+		exit
+	fi
 
-	# notification
-	notify-send -t 5000 -i $N_ICON $N_TITLE "started at $(date +%H:%M)"
+	notify-send -t 10000 "+++ Borg Backup started at $(date +%H:%M) +++"
 
-	local OUTPUT=$(borg create -v --stats                          \
-	    $REPOSITORY::'{hostname}-{now:%Y-%m-%d}'    \
-	    /home/david-w/                              \
-	    /etc/                                       \
-	    --exclude '/home/*/.cache'                  \
-	    --exclude '*.pyc')
+	OUTPUT=$(borg create -v --stats                 \
+		$REPOSITORY::'{hostname}-{now:%Y-%m-%d}'    \
+		/home/david-w/                              \
+		/etc/                                       \
+		--exclude '/home/*/.cache'                  \
+		--exclude '*.pyc')
 
-    echo "$OUTPUT"
 
-    echo "$OUTPUT" | grep -i "Duration" | xargs -0 notify-send -t 5000 -i $N_ICON $N_TITLE
+	echo "$OUTPUT"
+
 
 	# Use the `prune` subcommand to maintain 7 daily, 4 weekly and 6 monthly
 	# archives of THIS machine. The '{hostname}-' prefix is very important to
@@ -27,6 +31,9 @@ main () {
 	# other machine's archives also.
 	borg prune -v --list $REPOSITORY --prefix '{hostname}-' \
 	    --keep-daily=7 --keep-weekly=4 --keep-monthly=6
+
+
+	notify-send -t 10000 "+++ Borg Backup finshed. +++"
 }
 
 main
