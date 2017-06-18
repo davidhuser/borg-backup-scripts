@@ -1,7 +1,7 @@
 [Unit]
 Description=Borg Backup
-Requires=mnt-davidhuser-bak.mount
-After=mnt-davidhuser-bak.mount
+Requires=mnt-david\x2dhuser\x2dbak.mount
+After=mnt-david\x2dhuser\x2dbak.mount
 
 [Service]
 ExecStart=/usr/local/bin/borg-backup.sh
