@@ -14,8 +14,8 @@ main () {
 
 	notify-send -t 20000 "+++ Borg Backup started at $(date +%H:%M) +++"
 
-	borg create -v --stats							\
-		$REPOSITORY::'{hostname}-{now:%Y-%m-%d}'    \
+	borg create -v --stats --compression lz4		\
+		$REPOSITORY::'{hostname}-{now:%Y-%m-%d}'	\
 		/home/david/								\
 		--exclude '/home/*/.cache'					\
 		--exclude '*.pyc'
