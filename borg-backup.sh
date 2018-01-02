@@ -23,6 +23,12 @@ main () {
 	# Route the normal process logging to journalctl
 	2>&1
 
+	# If there is an error backing up, reset passphrase envvar and exit
+	if [ "$?" = "1" ] ; then
+		export BORG_PASSPHRASE=""
+		exit 1
+	fi
+
 	# Prune the repo of extra backups
 	borg prune -v --list $REPOSITORY --prefix '{hostname}-' \
 		--keep-daily=7										\
