@@ -2,6 +2,7 @@
 Description=Run borgbackup daily at five, or run if missed
 
 [Timer]
+WakeSystem=false
 OnCalendar=17:00
 Persistent=true     
  
