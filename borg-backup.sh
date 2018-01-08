@@ -2,29 +2,52 @@
 
 main () {
 
-	REPOSITORY='/media/david/backup'
-	export BORG_PASSPHRASE=$(</home/david/.config/BORG_PASSPHRASE)
+	USERNAME='david'
+	REPOSITORY="/media/$USERNAME/backup"
+	DEVICE='/dev/sdb'
 
 	if df | grep -qs "$REPOSITORY"; then
 		echo "$REPOSITORY mounted."
 	else
-		notify-send -t 10000 $N_TITLE "$REPOSITORY not available"
-		exit
+		/bin/su -s /bin/bash $USERNAME -c "notify-send -t 10000 $N_TITLE '$REPOSITORY not available'"
+		exit 1
 	fi
 
-	notify-send -t 20000 "+++ Borg Backup started at $(date +%H:%M) +++"
+	/bin/su -s /bin/bash $USERNAME -c "notify-send -t 20000 '+++ Borg Backup started at $(date +%H:%M) +++'"
 
-	borg create -v --stats --compression lz4		\
-		$REPOSITORY::'{hostname}-{now:%Y-%m-%d}'	\
-		/home/david/								\
-		--exclude '/home/*/.cache'					\
+	# No one can answer if Borg asks these questions, it is better to just fail quickly
+	# instead of hanging.
+	export BORG_RELOCATED_REPO_ACCESS_IS_OK=no
+	export BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK=no
+
+	export BORG_PASSPHRASE=$(<"/home/$USERNAME/.config/BORG_PASSPHRASE")
+
+	borg --version
+
+	# Options for borg create
+	BORG_OPTS="-v --stats --compression lz4 --one-file-system"
+
+	# home partition
+	borg create $BORG_OPTS								\
+		$REPOSITORY::'{hostname}-home-{now:%Y-%m-%d}'	\
+		/home											\
+		--exclude '/home/*/.cache'						\
 		--exclude '*.pyc'
 
-	# Route the normal process logging to journalctl
-	2>&1
+	# If there is an error backing up, reset passphrase envvar and exit
+	if [ ! "$?" -eq 0 ]; then
+		export BORG_PASSPHRASE=""
+		exit 1
+	fi
+
+	# system partition
+	borg create $BORG_OPTS								\
+		$REPOSITORY::'{hostname}-system-{now:%Y-%m-%d}'	\
+		/												\
+		--exclude '/var/cache'							\
 
 	# If there is an error backing up, reset passphrase envvar and exit
-	if [ "$?" = "1" ] ; then
+	if [ ! "$?" -eq 0 ]; then
 		export BORG_PASSPHRASE=""
 		exit 1
 	fi
@@ -35,16 +58,22 @@ main () {
 		--keep-weekly=4										\
 		--keep-monthly=6									\
 
+	# If there is an error pruning, reset passphrase envvar and exit
+	if [  ! "$?" -eq 0 ]; then
+		export BORG_PASSPHRASE=""
+		exit 1
+	fi
 
 	# Include the remaining device capacity in the log
-	df -hl | grep --color=never /dev/sdb
+	df -hl | grep --color=never $DEVICE
 
 	borg list $REPOSITORY
 
 	# Unset the passphrase
 	export BORG_PASSPHRASE=""
 	
-	notify-send -t 20000 "+++ Borg Backup finished. +++"
+	/bin/su -s /bin/bash $USERNAME -c "notify-send -t 20000 '+++ Borg Backup finished. +++'"
+	sync
 	exit 0
 }
 

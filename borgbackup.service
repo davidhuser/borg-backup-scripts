@@ -3,5 +3,6 @@ Description=Borg Backup
 
 [Service]
 Type=simple
-ExecStartPre=/usr/bin/borg break-lock /media/david/backup
+Restart=on-failure
+RestartSec=3600
 ExecStart=/home/david/.local/bin/borg-backup.sh
