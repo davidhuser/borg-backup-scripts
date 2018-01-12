@@ -25,13 +25,13 @@ main () {
 	borg --version
 
 	# Options for borg create
-	BORG_OPTS="-v --stats --compression lz4 --one-file-system"
+	BORG_OPTS="-v --stats --compression lz4"
 
 	# home partition
 	borg create $BORG_OPTS								\
 		$REPOSITORY::'{hostname}-home-{now:%Y-%m-%d}'	\
 		/home/$USERNAME									\
-		--exclude '/home/*/.cache'						\
+		--exclude "/home/$USERNAME/.cache"				\
 		--exclude '*.pyc'
 
 	# system partition
