@@ -27,20 +27,14 @@ main () {
 	# Options for borg create
 	BORG_OPTS="-v --stats --compression lz4"
 
-	# home partition
 	borg create $BORG_OPTS								\
-		$REPOSITORY::'{hostname}-home-{now:%Y-%m-%d}'	\
-		/home/$USERNAME									\
+		$REPOSITORY::'{hostname}-{now:%Y-%m-%d}'		\
+		"/home/$USERNAME"								\
+		"/opt"											\
+		"/etc"											\
 		--exclude "/home/$USERNAME/.cache"				\
-		--exclude '*.pyc'
-
-	# system partition
-	borg create $BORG_OPTS								\
-		$REPOSITORY::'{hostname}-system-{now:%Y-%m-%d}'	\
-		/												\
-		--exclude "/home/$USERNAME"						\
-		--exclude '/var/cache'							\
-
+		--exclude '*.pyc'								
+	
 	# If there is an error backing up, reset passphrase envvar and exit
 	if [ ! "$?" -eq 0 ]; then
 		export BORG_PASSPHRASE=""

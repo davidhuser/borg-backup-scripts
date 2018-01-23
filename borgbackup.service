@@ -3,6 +3,9 @@ Description=Borg Backup
 
 [Service]
 Type=simple
+Nice=19
+IOSchedulingClass=2
+IOSchedulingPriority=7
 Restart=on-failure
 RestartSec=3600
 ExecStart=/home/david/.local/bin/borg-backup.sh
