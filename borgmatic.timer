@@ -1,0 +1,8 @@
+[Unit]
+Description=Run borg
+
+[Timer]
+OnCalendar=*-*-* 00/3:00:00
+
+[Install]
+WantedBy=timers.target

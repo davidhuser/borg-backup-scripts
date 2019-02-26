@@ -1,0 +1,27 @@
+location:
+  source_directories:
+    - /home
+    - /etc
+    - /var/log/syslog*
+  repositories:
+    - /media/david/backup
+  exclude_patterns:
+    - '*.pyc'
+    - '~/*/.cache'
+  exclude_caches: true
+storage:
+  compression: lz4
+  encryption_passphrase: CHANGEME
+  archive_name_format: '{hostname}-{now}'
+retention:
+  keep_daily: 7
+  keep_weekly: 4
+  keep_monthly: 12
+  keep_yearly: 1
+  prefix: '{hostname}-'
+consistency:
+  checks:
+    - repository
+    - archives
+  prefix: '{hostname}-'
+  check_last: 3
