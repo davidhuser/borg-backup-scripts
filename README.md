@@ -1,6 +1,8 @@
 # Install
 
 ```
+ls -l /dev/disk/by-uuid
+
 ex. /etc/fstab file:
 UUID=8bbddade-b35e-2d33-8b77-697d8b2533dd /media/david/backup auto nosuid,nodev,nofail,x-gvfs-show 0 0
 
