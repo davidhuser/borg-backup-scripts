@@ -8,10 +8,10 @@ main () {
 
 	if ssh -i ~/.ssh/borgbackup "$TARGET" true; then
 		echo "$TARGET alive and accessible via SSH"
-    	/usr/bin/borgmatic --files -c /home/david/Github/borg-backup-scripts/config.yaml
+		/usr/bin/borgmatic --files -c /home/david/Github/borg-backup-scripts/config.yaml
 	else
-	    echo "$TARGET not reachable."
-	    exit 1
+		echo "$TARGET not reachable."
+		exit 1
 	fi
 }
 
