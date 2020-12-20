@@ -1,18 +1,19 @@
 location:
   source_directories:
-    - /home
-    - /etc
-    - /var/log/syslog*
+    - /home/david
   repositories:
-    - /media/david/backup
+    - borgbackup@piero.local:/mnt/backups
   exclude_patterns:
     - '*.pyc'
-    - '~/*/.cache'
+    - /home/david/.cache
+    - '/home/david/VirtualBox VMs'
+    - '/home/david/.Genymobile'
   exclude_caches: true
 storage:
   compression: lz4
   encryption_passphrase: CHANGEME
   archive_name_format: '{hostname}-{now}'
+  ssh_command: ssh -i ~/.ssh/borgbackup
 retention:
   keep_daily: 7
   keep_weekly: 4
