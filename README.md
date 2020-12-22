@@ -10,7 +10,8 @@ sudo su borgbackup
 mkdir -p ~/.ssh && chmod 700 ~/.ssh && touch ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys
 
 # https://borgbackup.readthedocs.io/en/stable/usage/serve.html#ssh-configuration
-echo -e "ClientAliveInterval 10\nClientAliveCountMax 30" >> ~/.ssh/config
+sudo -i
+echo -e "ClientAliveInterval 10\nClientAliveCountMax 30" >> /etc/ssh/sshd_config
 
 ```
 
