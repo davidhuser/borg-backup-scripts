@@ -14,6 +14,7 @@ storage:
   encryption_passphrase: CHANGEME
   archive_name_format: '{hostname}-{now}'
   ssh_command: ssh -i ~/.ssh/borgbackup
+  lock_wait: 600
 retention:
   keep_daily: 7
   keep_weekly: 4

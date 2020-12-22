@@ -10,7 +10,7 @@ main () {
 
 	if ssh -i ~/.ssh/borgbackup "$TARGET" true; then
 		echo "$TIMESTAMP  $TARGET alive and accessible via SSH"
-		/usr/bin/borgmatic -c /home/david/Github/borg-backup-scripts/config.yaml --files --stats --lock-wait 600
+		/usr/bin/borgmatic -c /home/david/Github/borg-backup-scripts/config.yaml --files --stats
 	else
 		echo "$TIMESTAMP  $TARGET not reachable."
 		exit 1
