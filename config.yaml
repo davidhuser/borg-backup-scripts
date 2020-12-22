@@ -9,6 +9,9 @@ location:
     - '/home/david/VirtualBox VMs'
     - '/home/david/.Genymobile'
   exclude_caches: true
+hooks:
+  before_backup:
+    - ping -q -c 1 piero.local > /dev/null || exit 75
 storage:
   compression: lz4
   encryption_passphrase: CHANGEME

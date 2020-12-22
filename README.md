@@ -11,7 +11,7 @@ mkdir -p ~/.ssh && chmod 700 ~/.ssh && touch ~/.ssh/authorized_keys && chmod 600
 
 # https://borgbackup.readthedocs.io/en/stable/usage/serve.html#ssh-configuration
 sudo -i
-echo -e "ClientAliveInterval 10\nClientAliveCountMax 30" >> /etc/ssh/sshd_config
+echo -e "ClientAliveInterval 10\nClientAliveCountMax 30" >> /etc/ssh/sshd_config && service ssh reload
 
 ```
 
@@ -81,13 +81,12 @@ cd ~/Github && git clone https://github.com/davidhuser/borg-backup-scripts && cd
 
 # change encryption_passphrase in config.yaml to match repokey
 vim config.yaml
-chmod +x ssh_borgmatic.sh
 
 # test it
-./ssh_borgmatic.sh
+/usr/bin/borgmatic -c /home/david/Github/borg-backup-scripts/config.yaml --files --stats
 
 
 # add cron
-0 */3 * * * /bin/bash /home/david/Github/borg-backup-scripts/ssh_borgmatic.sh
+* 8,13,17,20,23 * * * /usr/bin/borgmatic -c /home/david/Github/borg-backup-scripts/config.yaml --files --stats --log-file /var/log/borgbackup.log
 
 ```
